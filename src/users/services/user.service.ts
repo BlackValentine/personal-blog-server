@@ -22,7 +22,8 @@ export class UserService {
     if (userInDb) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
-    const newUser = this.usersRepository.save(user);
+    const newUser = await this.usersRepository.save(user);
+    console.log(newUser);
     return plainToInstance(CreateUserDto, newUser);
   }
 

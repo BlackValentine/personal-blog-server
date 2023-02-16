@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogModule } from './blogs/blog.module';
+import { Blog } from './blogs/entities/blog.entity';
 import { User } from './users/entities/user.entity';
 import { UserModule } from './users/user.module';
 
@@ -17,7 +18,7 @@ import { UserModule } from './users/user.module';
       username: 'root',
       password: 'Cocapizza2',
       database: 'BlavaBlog',
-      entities: [User],
+      entities: [User, Blog],
       synchronize: true,
     }),
     ConfigModule.forRoot(),

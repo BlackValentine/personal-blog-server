@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateNewBlog } from '../dtos/blog.dto';
+import { CreateNewBlogDto } from '../dtos/blog.dto';
 import { Blog } from '../entities/blog.entity';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class BlogService {
     return await this.blogRepository.find();
   }
 
-  async getBlogById(id: number): Promise<Blog> {
+  async getBlogById(id: string): Promise<Blog> {
     const blog = await this.blogRepository.findOne({ where: { id: id } });
     if (!blog) {
       throw new HttpException('This blog is not exsit', HttpStatus.BAD_REQUEST);
@@ -22,11 +22,11 @@ export class BlogService {
     return blog;
   }
 
-  async createNewBlog(blog: CreateNewBlog): Promise<Blog> {
+  async createNewBlog(blog: CreateNewBlogDto): Promise<Blog> {
     return await this.blogRepository.save(blog);
   }
 
-  async editBlog(blog: Blog): Promise<CreateNewBlog> {
+  async editBlog(blog: Blog): Promise<CreateNewBlogDto> {
     const blogEdited = await this.blogRepository.findOne({
       where: { id: blog.id },
     });
@@ -34,13 +34,8 @@ export class BlogService {
     if (!blogEdited) {
       throw new HttpException('Blog is not exist', HttpStatus.BAD_REQUEST);
     } else {
-      blogEdited.title = blog.title;
-      blogEdited.subTitle = blog.subTitle;
-      blogEdited.image = blog.image;
-      blogEdited.content = blog.content;
-      blogEdited.rawContent = blog.rawContent;
-
-      return this.blogRepository.save(blogEdited);
+      const mergeBlog = this.blogRepository.merge(blogEdited, blog);
+      return this.blogRepository.save(mergeBlog);
     }
   }
 

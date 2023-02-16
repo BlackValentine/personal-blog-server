@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateNewBlog } from '../dtos/blog.dto';
+import { CreateNewBlogDto } from '../dtos/blog.dto';
 import { Blog } from '../entities/blog.entity';
 import { BlogService } from '../services/blog.service';
 
@@ -21,12 +21,12 @@ export class BlogController {
   }
 
   @Get(':id')
-  getBlogById(@Param('id') id: number) {
-    return this.blogService.getBlogById(Number(id));
+  getBlogById(@Param('id') id: string) {
+    return this.blogService.getBlogById(id);
   }
 
   @Post('create')
-  createNewBlog(@Body() blog: CreateNewBlog) {
+  createNewBlog(@Body() blog: CreateNewBlogDto) {
     return this.blogService.createNewBlog(blog);
   }
 

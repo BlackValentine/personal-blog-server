@@ -5,8 +5,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
   name: 'Blogs',
 })
 export class Blog extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;

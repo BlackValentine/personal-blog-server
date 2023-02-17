@@ -35,8 +35,8 @@ export class BlogController {
     return this.blogService.editBlog(blog);
   }
 
-  @Delete('delete')
-  deleteBlog(@Body() id: string) {
+  @Delete('delete/:id')
+  deleteBlog(@Param('id') id: string) {
     return this.blogService.deleteBlog(id);
   }
 }

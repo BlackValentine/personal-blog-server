@@ -3,27 +3,39 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateNewBlogDto } from '../dtos/blog.dto';
 import { Blog } from '../entities/blog.entity';
+import { S3Service } from './s3.service';
 
 @Injectable()
 export class BlogService {
   constructor(
     @InjectRepository(Blog) private readonly blogRepository: Repository<Blog>,
+    private readonly s3Service: S3Service,
   ) {}
 
   async getAllBlog(): Promise<Blog[]> {
-    return await this.blogRepository.find();
+    const allBlogs = await this.blogRepository.find();
+    for (const blog of allBlogs) {
+      blog.image = await this.s3Service.getLinkMediaKey(blog.image);
+    }
+    return allBlogs;
   }
 
   async getBlogById(id: string): Promise<Blog> {
     const blog = await this.blogRepository.findOne({ where: { id: id } });
     if (!blog) {
       throw new HttpException('This blog is not exsit', HttpStatus.BAD_REQUEST);
+    } else {
+      blog.image = await this.s3Service.getLinkMediaKey(blog.image);
+      return blog;
     }
-    return blog;
   }
 
   async createNewBlog(blog: CreateNewBlogDto): Promise<Blog> {
-    return await this.blogRepository.save(blog);
+    const imageName = await this.s3Service.upload(blog.image);
+    return await this.blogRepository.save({
+      ...blog,
+      image: imageName,
+    });
   }
 
   async editBlog(blog: Blog): Promise<CreateNewBlogDto> {
@@ -40,7 +52,18 @@ export class BlogService {
   }
 
   async deleteBlog(id: string) {
-    await this.blogRepository.delete(id);
-    throw new HttpException('Delete blog successfully!!!', HttpStatus.ACCEPTED);
+    const blogDelete = await this.blogRepository.findOne({
+      where: { id: id },
+    });
+    if (!blogDelete) {
+      throw new HttpException('Blog not found', HttpStatus.BAD_REQUEST);
+    } else {
+      await this.s3Service.deleteFileS3(blogDelete.image);
+      await this.blogRepository.delete(id);
+      throw new HttpException(
+        'Delete blog successfully!!!',
+        HttpStatus.ACCEPTED,
+      );
+    }
   }
 }

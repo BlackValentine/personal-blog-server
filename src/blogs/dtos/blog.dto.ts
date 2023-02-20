@@ -16,3 +16,11 @@ export class CreateNewBlogDto {
   @IsNotEmpty()
   image: string;
 }
+
+export class PaginationBlogDto {
+  @IsNotEmpty()
+  page: number;
+
+  @IsNotEmpty()
+  limit: number;
+}

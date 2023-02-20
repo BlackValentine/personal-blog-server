@@ -30,6 +30,20 @@ export class BlogService {
     }
   }
 
+  async getAllBlogPagination(page: number, limit: number) {
+    const allBlogs = await this.blogRepository.count();
+    const count = (allBlogs / limit).toFixed();
+    const blogs = await this.blogRepository.find({
+      order: { created_at: 'DESC' },
+      take: Number(limit),
+      skip: (Number(page) - 1) * Number(limit),
+    });
+    return {
+      blogs,
+      count,
+    };
+  }
+
   async createNewBlog(blog: CreateNewBlogDto): Promise<Blog> {
     const imageName = await this.s3Service.upload(blog.image);
     return await this.blogRepository.save({

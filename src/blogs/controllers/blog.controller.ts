@@ -4,10 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  Query,
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateNewBlogDto } from '../dtos/blog.dto';
+import { CreateNewBlogDto, PaginationBlogDto } from '../dtos/blog.dto';
 import { Blog } from '../entities/blog.entity';
 import { BlogService } from '../services/blog.service';
 
@@ -23,6 +24,11 @@ export class BlogController {
   @Get(':id')
   getBlogById(@Param('id') id: string) {
     return this.blogService.getBlogById(id);
+  }
+
+  @Get()
+  getAllBlogPagination(@Query() { page, limit }: PaginationBlogDto) {
+    return this.blogService.getAllBlogPagination(page, limit);
   }
 
   @Post('create')

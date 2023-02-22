@@ -45,6 +45,7 @@ export class BlogService {
   }
 
   async createNewBlog(blog: CreateNewBlogDto): Promise<Blog> {
+    console.log(blog);
     const imageName = await this.s3Service.upload(blog.image);
     return await this.blogRepository.save({
       ...blog,

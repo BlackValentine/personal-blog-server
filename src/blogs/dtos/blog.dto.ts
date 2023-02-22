@@ -15,6 +15,9 @@ export class CreateNewBlogDto {
 
   @IsNotEmpty()
   image: string;
+
+  @IsNotEmpty()
+  type: string;
 }
 
 export class PaginationBlogDto {

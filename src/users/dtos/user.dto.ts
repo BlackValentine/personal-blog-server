@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
@@ -10,7 +10,15 @@ export class CreateUserDto {
   @IsNotEmpty()
   email: string;
 
+  @Expose()
   @IsNotEmpty()
-  @Exclude()
+  password: string;
+}
+
+export class LoginUserDto {
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
   password: string;
 }

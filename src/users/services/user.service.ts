@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../dtos/user.dto';
+import { CreateUserDto, LoginUserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
@@ -28,5 +28,31 @@ export class UserService {
 
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async findByLogin({ email, password }: LoginUserDto): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+
+    const isEqual = bcrypt.compareSync(password, user.password);
+    if (!isEqual) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    return await this.usersRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
   }
 }

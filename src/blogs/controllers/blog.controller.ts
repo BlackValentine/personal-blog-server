@@ -7,7 +7,9 @@ import {
   Query,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateNewBlogDto, PaginationBlogDto } from '../dtos/blog.dto';
 import { Blog } from '../entities/blog.entity';
 import { BlogService } from '../services/blog.service';
@@ -32,16 +34,19 @@ export class BlogController {
   }
 
   @Post('create')
+  @UseGuards(AuthGuard())
   createNewBlog(@Body() blog: CreateNewBlogDto) {
     return this.blogService.createNewBlog(blog);
   }
 
   @Put('edit')
+  @UseGuards(AuthGuard())
   editBlog(@Body() blog: Blog) {
     return this.blogService.editBlog(blog);
   }
 
   @Delete('delete/:id')
+  @UseGuards(AuthGuard())
   deleteBlog(@Param('id') id: string) {
     return this.blogService.deleteBlog(id);
   }

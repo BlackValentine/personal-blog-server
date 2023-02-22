@@ -20,6 +20,9 @@ import { UserModule } from './users/user.module';
       database: 'BlavaBlog',
       entities: [User, Blog],
       synchronize: true,
+      extra: {
+        charset: 'utf8mb4_unicode_ci',
+      },
     }),
     ConfigModule.forRoot(),
     BlogModule,

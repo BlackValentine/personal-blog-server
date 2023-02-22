@@ -16,7 +16,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Exclude()
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column({ default: false })

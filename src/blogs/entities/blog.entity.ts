@@ -11,15 +11,18 @@ export class Blog extends BaseEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column('text')
   subTitle: string;
 
   @Column()
   image: string;
 
-  @Column()
+  @Column('text')
   content: string;
 
-  @Column()
+  @Column('text')
   rawContent: string;
+
+  @Column()
+  type: string;
 }

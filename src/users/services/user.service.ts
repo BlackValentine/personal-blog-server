@@ -55,4 +55,39 @@ export class UserService {
       },
     });
   }
+
+  async update(filter, update) {
+    if (update.refreshToken) {
+      update.refreshToken = await bcrypt.hash(
+        this.reverse(update.refreshToken),
+        10,
+      );
+    }
+    const user = await this.usersRepository.findOne({
+      where: {
+        email: filter.email,
+      },
+    });
+    const mergeUser = this.usersRepository.merge(user, update);
+    return this.usersRepository.save(mergeUser);
+  }
+
+  async getUserByRefreshToken(refreshToken, email) {
+    const user = await this.findByEmail(email);
+    if (!user) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+    const isEqual = await bcrypt.compare(
+      this.reverse(refreshToken),
+      user.refreshToken,
+    );
+    if (!isEqual) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+    return user;
+  }
+
+  private reverse(s) {
+    return s.split('').reverse().join('');
+  }
 }

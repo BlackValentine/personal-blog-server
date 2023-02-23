@@ -21,4 +21,7 @@ export class User extends BaseEntity {
 
   @Column({ default: false })
   isActive: boolean;
+
+  @Column()
+  refreshToken: string;
 }

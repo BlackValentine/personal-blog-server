@@ -24,6 +24,7 @@ export class BlogController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard())
   getBlogById(@Param('id') id: string) {
     return this.blogService.getBlogById(id);
   }

@@ -36,8 +36,11 @@ export class BlogService {
     const blogs = await this.blogRepository.find({
       order: { created_at: 'DESC' },
       take: Number(limit),
-      skip: (Number(page) - 1) * Number(limit),
+      skip: (Number(page) - 1) * Number(limit) || 0,
     });
+    for (const blog of blogs) {
+      blog.image = await this.s3Service.getLinkMediaKey(blog.image);
+    }
     return {
       blogs,
       count,

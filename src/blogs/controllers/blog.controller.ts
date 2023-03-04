@@ -35,13 +35,11 @@ export class BlogController {
   }
 
   @Post('create')
-  @UseGuards(AuthGuard())
   createNewBlog(@Body() blog: CreateNewBlogDto) {
     return this.blogService.createNewBlog(blog);
   }
 
   @Put('edit')
-  @UseGuards(AuthGuard())
   editBlog(@Body() blog: Blog) {
     return this.blogService.editBlog(blog);
   }

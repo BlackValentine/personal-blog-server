@@ -23,6 +23,7 @@ export class AuthService {
     const user = await this.userService.findByLogin(loginUserDto);
     const token = await this._createToken(user);
     return {
+      userName: user.userName,
       email: user.email,
       ...token,
     };

@@ -24,7 +24,6 @@ export class BlogController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard())
   getBlogById(@Param('id') id: string) {
     return this.blogService.getBlogById(id);
   }
@@ -35,11 +34,13 @@ export class BlogController {
   }
 
   @Post('create')
+  @UseGuards(AuthGuard())
   createNewBlog(@Body() blog: CreateNewBlogDto) {
     return this.blogService.createNewBlog(blog);
   }
 
   @Put('edit')
+  @UseGuards(AuthGuard())
   editBlog(@Body() blog: Blog) {
     return this.blogService.editBlog(blog);
   }

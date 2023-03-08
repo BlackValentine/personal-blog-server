@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogModule } from './blogs/blog.module';
 import { Blog } from './blogs/entities/blog.entity';
+import { SubscriberEntity } from './subscribers/subscriber.entity';
+import { SubscriberModule } from './subscribers/subscriber.module';
 import { User } from './users/entities/user.entity';
 import { UserModule } from './users/user.module';
 
@@ -18,7 +20,7 @@ import { UserModule } from './users/user.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Blog],
+      entities: [User, Blog, SubscriberEntity],
       synchronize: true,
       extra: {
         charset: 'utf8mb4_unicode_ci',
@@ -27,6 +29,7 @@ import { UserModule } from './users/user.module';
     ConfigModule.forRoot(),
     BlogModule,
     UserModule,
+    SubscriberModule,
   ],
   controllers: [AppController],
   providers: [AppService],
